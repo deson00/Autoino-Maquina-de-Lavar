@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <avr/wdt.h>
-
-String entrada ;
+#include <SoftwareSerial.h>
+SoftwareSerial btSerial(8, 9); // RX, TX
 
 int pino_nivel_agua = 2; // nivel da agua
 int pino_encher_agua = 3;
@@ -14,6 +14,8 @@ int tempo_molho = 5 ;
 
 void setup() {
   wdt_disable(); // monitoramento
+  btSerial.begin(9600);//bluetooth
+  Serial.begin(9600);//porta serial
   pinMode(pino_nivel_agua,INPUT);
   pinMode(pino_bomba_agua,OUTPUT);
   pinMode(pino_agitacao,OUTPUT);
@@ -26,17 +28,50 @@ void setup() {
 }
 
 void loop() {
-  principal(); // Função de tarefaz
+  //static String btComando; 
+  while (btSerial.available()) {
+     char comandoRec = btSerial.read();
+     //btComando += char( comandoRec );//se precisar de uma palavra concatena
+     Serial.print(comandoRec);
+        principal(comandoRec); // Função de tarefaz       
+     }
 }
 
-void principal() {
-  int modo = 1;
-  if (modo == "1"){
+void principal(char comando_recebido) {
+  if (comando_recebido == "1"){
     agitacao();
     molho();
     esvaziar();
     centrifugar();
   }
+  if (comando_recebido == "2"){
+    agitacao();
+    molho();
+    agitacao();
+    esvaziar();
+    centrifugar();
+  }
+  if (comando_recebido == "3"){
+    agitacao();
+    molho();
+    agitacao();
+    esvaziar();
+    centrifugar();
+  }
+  if (comando_recebido == "4"){
+    esvaziar();
+  }
+  if (comando_recebido == "5"){
+    esvaziar();
+    centrifugar();
+  }
+  if (comando_recebido == "6"){
+    //coloque aqui modo personalizado 
+  }
+  if (comando_recebido == "0"){
+    //cancelar desliga tudo
+  }
+
 }
 
 void agitacao() {
