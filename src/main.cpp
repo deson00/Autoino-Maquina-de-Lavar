@@ -8,10 +8,11 @@ int pino_encher_agua = 3;
 int pino_bomba_agua = 4;
 int pino_agitacao = 5;
 int pino_centrifugacao = 6;
-int tempo_agitacao = 1;
-int tempo_centrifugacao = 1;
-int tempo_molho = 1 ;
+int tempo_agitacao = 5;
+int tempo_centrifugacao = 3;
+int tempo_molho = 5 ;
 int segundos_anterior = 0;
+int msg_boas_vindas = 0;
 
 
 void agitacao() {
@@ -261,6 +262,11 @@ void setup() {
 }
 
 void loop() {
+  if(msg_boas_vindas == 0){
+    Serial.println("Maquina ligada, aguardando entrada.");
+    msg_boas_vindas = 1;
+  }
+    
   static String btComando;
   //Serial.println("Recebendo dados");
   while (btSerial.available()) {
