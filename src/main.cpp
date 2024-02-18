@@ -8,10 +8,11 @@ int pino_encher_agua = 3;
 int pino_bomba_agua = 4;
 int pino_agitacao = 5;
 int pino_centrifugacao = 6;
-int tempo_agitacao = 1;
-int tempo_centrifugacao = 1;
-int tempo_molho = 1 ;
+int tempo_agitacao = 5;
+int tempo_centrifugacao = 3;
+int tempo_molho = 5 ;
 int segundos_anterior = 0;
+int msg_boas_vindas = 0;
 
 
 void agitacao() {
@@ -55,7 +56,6 @@ void agitacao() {
       //loop e entrada de agua
     }
     digitalWrite(pino_encher_agua, LOW); // desliga entrada de agua
-    Serial.println("Nivel de agua atingido");
     agitacao();
   }
 } 
@@ -190,6 +190,8 @@ void principal(String comando_recebido) {
     agitacao();
     esvaziar();
     centrifugar();
+    Serial.println("Modo 1 Brancos finalizado");
+
   }
   if (comando_recebido == "2"){
     Serial.println("Coloridos resistentes");
@@ -202,6 +204,7 @@ void principal(String comando_recebido) {
     agitacao();
     esvaziar();
     centrifugar();
+    Serial.println("Modo 2 Coloridos resistentes finalizado");
 
   }
   if (comando_recebido == "3"){
@@ -213,6 +216,7 @@ void principal(String comando_recebido) {
     agitacao();
     esvaziar();
     centrifugar();
+    Serial.println("Modo 3 Coloridos delicados finalizado");
 
   }
   if (comando_recebido == "4"){
@@ -220,11 +224,15 @@ void principal(String comando_recebido) {
     esvaziar();
     agitacao();
     centrifugar();
+    Serial.println("Modo 4 Enxague finalizado");
+
   }
   if (comando_recebido == "5"){
     Serial.println("Centrifugação");
     esvaziar();
     centrifugar();
+    Serial.println("Modo 5 Centrifugação finalizado");
+
   }
   if (comando_recebido == "6"){
     Serial.println("Personalizado");
@@ -254,6 +262,11 @@ void setup() {
 }
 
 void loop() {
+  if(msg_boas_vindas == 0){
+    Serial.println("Maquina ligada, aguardando entrada.");
+    msg_boas_vindas = 1;
+  }
+    
   static String btComando;
   //Serial.println("Recebendo dados");
   while (btSerial.available()) {
